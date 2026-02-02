@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sunny_VoiceBot</title>
+</head>
+<body style="text-align:center;font-family:sans-serif;margin-top:100px">
+  <h2>Talk to Sunny 🎤</h2>
+  <button onclick="startListening()" style="font-size:20px">Ask Question</button>
+  <p id="text"></p>
+
+<script>
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = "en-IN";
+
+function startListening() {
+  recognition.start();
+}
+
+recognition.onresult = async function(event) {
+  const question = event.results[0][0].transcript;
+  document.getElementById("text").innerText = "You: " + question;
+
+  const res = await fetch("/ask", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ question })
+  });
+
+  const data = await res.json();
+
+  const audio = new Audio("data:audio/mp3;base64," + data.audio);
+  audio.play();
+};
+</script>
+</body>
+</html>

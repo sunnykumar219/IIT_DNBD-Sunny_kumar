@@ -9,27 +9,35 @@
   <p id="status"></p>
 
 <script>
-const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.lang = "en-IN";
+let recognition;
 
-function startListening(){
+function startListening() {
+  recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.lang = "en-IN";
   recognition.start();
+
+  document.getElementById("status").innerText = "Listening...";
+
+  recognition.onresult = async function(event) {
+    const question = event.results[0][0].transcript;
+    document.getElementById("status").innerText = "You: " + question;
+
+    const res = await fetch("/ask", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ question })
+    });
+
+    const data = await res.json();
+
+    const utter = new SpeechSynthesisUtterance(data.answer);
+    speechSynthesis.speak(utter);
+  };
+
+  recognition.onerror = function() {
+    document.getElementById("status").innerText = "Mic error. Please allow microphone.";
+  };
 }
-
-recognition.onresult = async function(event){
-  const question = event.results[0][0].transcript;
-
-  const res = await fetch("/ask", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ question })
-  });
-
-  const data = await res.json();
-
-  const utter = new SpeechSynthesisUtterance(data.answer);
-  speechSynthesis.speak(utter);
-};
 </script>
 </body>
 </html>

@@ -12,8 +12,8 @@ const openai = new OpenAI({
 });
 
 const SYSTEM_PROMPT = `
-I am Sunny Kumar, a final-year Electrical Engineering student at IIT (ISM) Dhanbad.
-
+You are Sunny Kumar, a final-year Electrical Engineering student at IIT (ISM) Dhanbad.
+Answer questions like Sunny in a confident, natural way in 5-6 sentences.
 `;
 
 app.post("/ask", async (req, res) => {
@@ -29,15 +29,7 @@ app.post("/ask", async (req, res) => {
 
   const answer = chat.choices[0].message.content;
 
-  const speech = await openai.audio.speech.create({
-    model: "gpt-4o-mini-tts",
-    voice: "alloy",
-    input: answer,
-  });
-
-  const audio = Buffer.from(await speech.arrayBuffer()).toString("base64");
-
-  res.send({ answer, audio });
+  res.send({ answer });
 });
 
 app.listen(3000, () => console.log("Server started"));

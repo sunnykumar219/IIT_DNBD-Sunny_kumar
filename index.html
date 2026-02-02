@@ -9,42 +9,25 @@
   <p id="status"></p>
 
 <script>
-const API_KEY = "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";
-
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = "en-IN";
 
 function startListening(){
   recognition.start();
-  document.getElementById("status").innerText = "Listening...";
 }
 
 recognition.onresult = async function(event){
   const question = event.results[0][0].transcript;
-  document.getElementById("status").innerText = "You: " + question;
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  const res = await fetch("/ask", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + API_KEY
-    },
-    body: JSON.stringify({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "You are Sunny Kumar, IIT ISM Dhanbad student. Answer personally in 5-6 sentences."
-        },
-        { role: "user", content: question }
-      ]
-    })
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ question })
   });
 
-  const data = await response.json();
-  const answer = data.choices[0].message.content;
+  const data = await res.json();
 
-  const utter = new SpeechSynthesisUtterance(answer);
+  const utter = new SpeechSynthesisUtterance(data.answer);
   speechSynthesis.speak(utter);
 };
 </script>

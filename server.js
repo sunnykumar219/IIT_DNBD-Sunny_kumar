@@ -37,7 +37,7 @@ app.post("/ask", async (req, res) => {
 
   const audio = Buffer.from(await speech.arrayBuffer()).toString("base64");
 
-  res.json({ answer, audio });
+  res.send({ answer, audio });
 });
 
 app.listen(3000, () => console.log("Server started"));

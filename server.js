@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(express.static('.'));
 
 const openai = new OpenAI({
-  apiKey: "PASTE_YOUR_OPENAI_KEY_HERE",
+  apiKey: "sk-xxxxxxxxxxxxxxxxxxxx",
 });
 
 const SYSTEM_PROMPT = `

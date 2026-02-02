@@ -28,8 +28,9 @@ recognition.onresult = async function(event) {
 
   const data = await res.json();
 
-  const audio = new Audio("data:audio/mp3;base64," + data.audio);
-  audio.play();
+  // Browser voice speaking (works perfectly)
+  const utter = new SpeechSynthesisUtterance(data.answer);
+  speechSynthesis.speak(utter);
 };
 </script>
 </body>

@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(express.static('.'));
 
 const openai = new OpenAI({
-  apiKey: "sk-xxxxxxxxxxxxxxxxxxxx",
+  apiKey: "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",
 });
 
 const SYSTEM_PROMPT = `

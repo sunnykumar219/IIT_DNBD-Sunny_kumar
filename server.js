@@ -5,6 +5,7 @@ import cors from "cors";
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.static('.'));
 
 const openai = new OpenAI({
   apiKey: "PASTE_YOUR_OPENAI_KEY_HERE",
